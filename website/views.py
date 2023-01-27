@@ -9,3 +9,6 @@ def portfolio_details(request):
 
 def blog_single(request):
     return render(request, 'blog-single.html')
+
+def contact_php(request):
+    return render(request, 'contact.php')    
