@@ -11,4 +11,4 @@ def blog_single(request):
     return render(request, 'blog-single.html')
 
 def contact_php(request):
-    return render(request, 'contact.php')    
+    return render(request, 'forms/contact.php')    
