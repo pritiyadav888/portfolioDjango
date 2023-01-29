@@ -1,5 +1,5 @@
 from django.shortcuts import render
-import configparser
+import os
 import requests
 from collections import Counter
 from django.core.cache import cache
@@ -9,9 +9,7 @@ def index(request):
     if data:
         total_repos, top_languages, pr_count, total_commits = data
     else:
-        config = configparser.ConfigParser()
-        config.read('config.ini')
-        token = config['Github']['token']
+        token = os.environ.get('Github_token')
         headers = {'Authorization': 'Token ' + token}
         # Get total number of repositories
         repos_url = 'https://api.github.com/user/repos?type=all&per_page=100&page=1'
