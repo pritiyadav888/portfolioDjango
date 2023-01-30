@@ -1,15 +1,16 @@
 from django.shortcuts import render
-import os
+# import configparser
 import requests
 from collections import Counter
 from django.core.cache import cache
-#   
+# token = os.environ.get('Github_token') 
+import os 
 def index(request):
     data = cache.get('github_data')
     if data:
         total_repos, pr_count, total_commits = data
     else:
-        token = os.environ.get('Github_token')
+        token = os.environ.get('Github_token') 
         headers = {'Authorization': 'Token ' + token}
         # Get total number of repositories
         repos_url = 'https://api.github.com/user/repos?type=all&per_page=100&page=1'
@@ -27,6 +28,7 @@ def index(request):
             commits_res = requests.get(commits_url, headers=headers)
             total_commits += len(commits_res.json())
         cache.set('github_data', (total_repos, pr_count, total_commits), 86400)
+        print("total_repos'pr_count'commits_count", total_repos,pr_count, total_commits)
     return render(request, 'index.html', {'total_repos': total_repos, 'pr_count': pr_count, 'commits_count': total_commits})
 
 def portfolio_details(request):
