@@ -8,9 +8,14 @@ import os
 def index(request):
     data = cache.get('github_data')
     if data:
-        total_repos, pr_count, total_commits = data
+        total_repos, pr_count = data
     else:
         token = os.environ.get('Github_token') 
+        # headers = {'Authorization': 'Token ' + token}
+        # Get total number of repositories
+        # config = configparser.ConfigParser()
+        # config.read('config.ini')
+        # token = config['Github']['token']
         headers = {'Authorization': 'Token ' + token}
         # Get total number of repositories
         repos_url = 'https://api.github.com/user/repos?type=all&per_page=100&page=1'
@@ -20,17 +25,16 @@ def index(request):
         # Get total count of PR
         pr_url = 'https://api.github.com/search/issues?q=is:pr+author:pritiyadav888'
         pr_res = requests.get(pr_url, headers=headers)
-        pr_count = len(pr_res.json()['items'])
-        # Get total number of commits
-        total_commits = 0
-        for repo in repos:
-            commits_url = f'https://api.github.com/repos/pritiyadav888/{repo["name"]}/commits'
-            commits_res = requests.get(commits_url, headers=headers)
-            total_commits += len(commits_res.json())
-        cache.set('github_data', (total_repos, pr_count, total_commits), 86400)
-        print("total_repos'pr_count'commits_count", total_repos,pr_count, total_commits)
-    return render(request, 'index.html', {'total_repos': total_repos, 'pr_count': pr_count, 'commits_count': total_commits})
-
+        pr_json = pr_res.json()
+        if "items" in pr_json:
+            pr_count = len(pr_json["items"])
+        else:
+            pr_count = 0
+        # Get total number of commit
+        cache.set('github_data', (total_repos, pr_count), 86400)
+        print("total_repos'pr_count'commits_count", total_repos,pr_count)
+    return render(request, 'index.html', {'total_repos': total_repos, 'pr_count': pr_count})
+    
 def portfolio_details(request):
     return render(request, 'portfolio-details.html')
 
