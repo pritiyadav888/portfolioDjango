@@ -9,7 +9,7 @@ def index(request):
     if data:
         total_repos, pr_count, total_commits = data
     else:
-        token = os.environ.get('Github_token')
+        token = os.environ.get('GITHUB_TOKEN')
         headers = {'Authorization': 'Token ' + token}
         # Get total number of repositories
         repos_url = 'https://api.github.com/user/repos?type=all&per_page=100&page=1'
