@@ -27,7 +27,6 @@ def index(request):
             commits_res = requests.get(commits_url, headers=headers)
             total_commits += len(commits_res.json())
         cache.set('github_data', (total_repos, pr_count, total_commits), 86400)
-        print("total_repos'pr_count'commits_count", total_repos,pr_count, total_commits)
     return render(request, 'index.html', {'total_repos': total_repos, 'pr_count': pr_count, 'commits_count': total_commits})
 
 def portfolio_details(request):
